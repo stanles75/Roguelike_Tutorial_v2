@@ -3,7 +3,7 @@ from typing import Optional
 
 import tcod.event
 
-from actions import Action, EscapeAction, MovementAction
+from actions import Action, EscapeAction, MovementAction, GenNextRoomAction
 
 
 class EventHandler(tcod.event.EventDispatch[Action]):
@@ -23,7 +23,10 @@ class EventHandler(tcod.event.EventDispatch[Action]):
             action = MovementAction(dx=-1, dy=0)
         elif key == tcod.event.K_RIGHT:
             action = MovementAction(dx=1, dy=0)
-
+        # Used to incrementally generate map
+        elif key == tcod.event.K_RETURN:
+            print("hit enter")
+            action = GenNextRoomAction()
         elif key == tcod.event.K_ESCAPE:
             action = EscapeAction()
 

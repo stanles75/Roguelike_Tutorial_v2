@@ -13,8 +13,14 @@ class Engine:
     def __init__(self, entities: Set[Entity], event_handler: EventHandler, game_map: GameMap, player: Entity):
         self.entities = entities
         self.event_handler = event_handler
-        self.game_map = game_map
+        self.game_map_iter = game_map
         self.player = player
+        try:
+            tmp = next(self.game_map_iter)
+        except StopIteration:
+            print("finished map gen")
+        else:
+            self.game_map = tmp
 
     def handle_events(self, events: Iterable[Any]) -> None:
         for event in events:

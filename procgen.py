@@ -99,5 +99,5 @@ def generate_dungeon(
 
         # Finally, append the new room to the list.
         rooms.append(new_room)
-
-    return dungeon
+        yield dungeon
+    #return dungeon

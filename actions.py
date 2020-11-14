@@ -42,11 +42,11 @@ class MovementAction(Action):
 
         entity.move(self.dx, self.dy)    
 
-class GenNextRoomAction(Action):    
-    def perform(self, engine: Engine, entity: Entity) -> None:
-        try:
-            tmp = next(engine.game_map_iter)
-        except StopIteration:
-            print("finished map gen")
-        else:
-            engine.game_map = tmp           
+# class GenNextRoomAction(Action):    
+#     def perform(self, engine: Engine, entity: Entity) -> None:
+#         try:
+#             tmp = next(engine.game_map_iter)
+#         except StopIteration:
+#             print("finished map gen")
+#         else:
+#             engine.game_map = tmp           

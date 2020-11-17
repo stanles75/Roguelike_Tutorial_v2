@@ -1,5 +1,6 @@
 
 from __future__ import annotations
+import os
 
 from typing import Callable, Optional, Tuple, TYPE_CHECKING, Union
 import tcod.event
@@ -380,7 +381,7 @@ class InventoryActivateHandler(InventoryEventHandler):
             return actions.EquipAction(self.engine.player, item)
         else:
             return None
-            
+
 class InventoryDropHandler(InventoryEventHandler):
     """Handle dropping an inventory item."""
 

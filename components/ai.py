@@ -7,6 +7,7 @@ import numpy as np  # type: ignore
 import tcod
 
 from actions import Action, BumpAction, MeleeAction, MovementAction, WaitAction
+from render_order import RenderOrder
 
 if TYPE_CHECKING:
     from entity import Actor
@@ -86,6 +87,50 @@ class ConfusedEnemy(BaseAI):
             # The actor will either try to move or attack in the chosen random direction.
             # Its possible the actor will just bump into the wall, wasting a turn.
             return BumpAction(self.entity, direction_x, direction_y,).perform()
+
+class ResurrectedEnemy(BaseAI):
+    """
+    A resurrected enemy will wait a certain number of turns after being killed to come back to 
+    life with it's previous AI and restored HP.
+    """
+
+    def __init__(
+        self, entity: Actor, 
+        previous_ai: Optional[BaseAI], 
+        previous_char: str,
+        previous_color: Tuple[int, int, int],
+        previous_name: str,
+        previous_blocks_movement: bool,
+        previous_render_order: RenderOrder,        
+        turns_remaining: int,
+    ):
+        super().__init__(entity)
+
+        self.previous_ai = previous_ai
+        self.previous_char = previous_char
+        self.previous_color = previous_color
+        self.previous_name = previous_name
+        self.previous_blocks_movement = previous_blocks_movement
+        self.previous_render_order = previous_render_order
+        self.turns_remaining = turns_remaining
+
+    def perform(self) -> None:
+        # Revert the entity back to the original state and reset fighter component hp to max_hp.
+        print(self.engine.game_map.get_num_actors_at_location(self.entity.x, self.entity.y))
+        if self.turns_remaining <= 0 and self.engine.game_map.get_num_actors_at_location(self.entity.x, self.entity.y) == 0:
+            self.engine.message_log.add_message(
+                f"The {self.entity.name} came back to life."
+            )
+            self.entity.ai = self.previous_ai
+            self.entity.char = self.previous_char
+            self.entity.color = self.previous_color
+            self.entity.name = self.previous_name
+            self.entity.blocks_movement = self.previous_blocks_movement
+            self.entity.render_order = self.previous_render_order
+            self.entity.fighter.hp = self.entity.fighter.max_hp
+            self.entity.resurrectable.number_of_lives -= 1
+        else:
+            self.turns_remaining -= 1
 
 class HostileEnemy(BaseAI):
     def __init__(self, entity: Actor):

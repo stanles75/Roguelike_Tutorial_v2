@@ -4,6 +4,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import color
+import components.resurrectable
+from components.ai import ResurrectedEnemy
 from components.base_component import BaseComponent
 from render_order import RenderOrder
 
@@ -59,10 +61,23 @@ class Fighter(BaseComponent):
             death_message = f"{self.parent.name} is dead!"
             death_message_color = color.enemy_die
 
+        if self.parent.resurrectable is not None and self.parent.resurrectable.number_of_lives > 0:
+            self.parent.ai = ResurrectedEnemy(
+                entity = self.parent,
+                previous_ai = self.parent.ai, 
+                previous_char = self.parent.char, 
+                previous_color = self.parent.color, 
+                previous_name = self.parent.name, 
+                previous_blocks_movement = self.parent.blocks_movement,
+                previous_render_order = self.parent.render_order, 
+                turns_remaining = self.parent.resurrectable.number_of_turns
+            )
+        else:
+            self.parent.ai = None
+
         self.parent.char = "%"
         self.parent.color = (191, 0, 0)
         self.parent.blocks_movement = False
-        self.parent.ai = None
         self.parent.name = f"remains of {self.parent.name}"
         self.parent.render_order = RenderOrder.CORPSE
 

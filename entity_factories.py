@@ -5,6 +5,7 @@ from components.equipment import Equipment
 from components.fighter import Fighter
 from components.inventory import Inventory
 from components.level import Level
+from components.resurrectable import Resurrectable
 from entity import Actor, Item
 
 player = Actor(
@@ -27,6 +28,18 @@ orc = Actor(
     fighter=Fighter(hp=10, base_defense=0, base_power=3),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=35),
+)
+
+zombie = Actor(
+    char="z",
+    color=(63, 127, 0),
+    name="Zombie",
+    ai_cls=HostileEnemy,
+    equipment=Equipment(),
+    fighter=Fighter(hp=10, base_defense=0, base_power=3),
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=35),
+    resurrectable=Resurrectable(3,5),
 )
 
 troll = Actor(

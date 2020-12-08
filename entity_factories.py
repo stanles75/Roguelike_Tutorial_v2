@@ -9,7 +9,7 @@ from components.resurrectable import Resurrectable
 from entity import Actor, Item
 
 player = Actor(
-    char="@",
+    char=chr(0x2569),
     color=(255, 255, 255),
     name="Player",
     ai_cls=HostileEnemy,
